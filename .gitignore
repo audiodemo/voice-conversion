@@ -1,0 +1,9 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.idea/
+checkpoints/
+raw_data/
+wtimit_preprocessed/

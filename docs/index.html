@@ -1,0 +1,652 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+	<title>Demo</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header class="page-header" role="banner">
+      <h1 class="project-name">Demo</h1>
+      <h2 class="project-tagline">
+		Vocoder-Free Non-Parallel Conversion of Whispered Speech With Masked 
+		Cycle-Consistent Generative Adversarial Networks
+	  </h2>
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      
+	<h2 id="abstract"><span style="color:black"><strong>Abstract</strong></span></h2>
+	<div style="text-align: justify"> 
+		Cycle-consistent generative adversarial networks have been widely used in 
+		non-parallel voice conversion (VC). 
+		Their ability to learn mappings between source and target features without 
+		relying on parallel training data eliminates the need for temporal alignments. 
+		However, most methods decouple the conversion of acoustic features from 
+		synthesizing the audio signal by using separate models for conversion and 
+		waveform synthesis. 
+		This work unifies conversion and synthesis into a single model, 
+		thereby eliminating the need for a separate vocoder. 
+		By leveraging cycle-consistent training and a self-supervised auxiliary 
+		training task, our model is able to efficiently generate converted high-quality 
+		raw audio waveforms. 
+		Subjective listening tests show that our method outperforms the baseline in 
+		whispered speech conversion (up to 6.7% relative improvement), 
+		and mean opinion score predictions yield competitive results 
+		in conventional VC (between 0.5% and 2.4% relative improvement).
+	<br>
+	<p></p>
+	<p><img src="img/process.png" style="width:800px;" /></p>
+
+	<p>Source code is available at: 
+		<a href="https://github.com/audiodemo/voice-conversion/tree/main/src">
+			https://github.com/audiodemo/voice-conversion/tree/main/src
+		</a>
+	</p>
+
+	<h2><span style="color:black"> <strong>Audio samples</strong></span></h2>
+	<h3><strong>Whispered speech conversion</strong></h3>
+	<p>Whispered speech conversion aims to to recover the fundamental 
+		frequency <i>F0</i>, without changing the linguistic content of an utterance, 
+		by mapping the whispered input to a corresponding normally phonated 
+		output produced by the same speaker. 
+		Some samples from the testset are presented in the table below.
+	</p>
+	<table style="width: 100%;">
+		<thead>
+		<tr>
+			<th></th>
+			<th>Whisper</th>
+			<th>Normal</th>
+			<th>Our method <small>(cycle-consistent only)</small></th>
+			<th>Our method <small>(+ masking + Ladv2)</small></th>
+			<th>Our method <small>(+ feature encoder)</small></th>
+			<th>MaskCycleGAN-VC [3]</th>
+			<th>HiFi-GAN + DTW [4]</th>
+			<th>NVC-Net [5]</th>
+		</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th scope="row">s006u110</th>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/whisper/s006u110.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/normal/s006u110.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_no_mask/s006u110.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/simple_mask/s006u110.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_mask_2d_config_v2/s006u110.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/mask_cycle_gan_vc_hifigan_vocoder/s006u110.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/hifigan_dtw/s006u110.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/nvcnet/s006u110.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">s007u238</th>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/whisper/s007u238.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/normal/s007u238.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_no_mask/s007u238.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/simple_mask/s007u238.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_mask_2d_config_v2/s007u238.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/mask_cycle_gan_vc_hifigan_vocoder/s007u238.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/hifigan_dtw/s007u238.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/nvcnet/s007u238.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">s008u098</th>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/whisper/s008u098.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/normal/s008u098.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_no_mask/s008u098.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/simple_mask/s008u098.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_mask_2d_config_v2/s008u098.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/mask_cycle_gan_vc_hifigan_vocoder/s008u098.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/hifigan_dtw/s008u098.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/nvcnet/s008u098.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">s015u422</th>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/whisper/s015u422.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/normal/s015u422.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_no_mask/s015u422.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/simple_mask/s015u422.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_mask_2d_config_v2/s015u422.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/mask_cycle_gan_vc_hifigan_vocoder/s015u422.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/hifigan_dtw/s015u422.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/nvcnet/s015u422.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">s105u147</th>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/whisper/s105u147.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/normal/s105u147.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_no_mask/s105u147.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/simple_mask/s105u147.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_mask_2d_config_v2/s105u147.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/mask_cycle_gan_vc_hifigan_vocoder/s105u147.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/hifigan_dtw/s105u147.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/nvcnet/s105u147.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">s109u189</th>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/whisper/s109u189.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/normal/s109u189.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_no_mask/s109u189.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/simple_mask/s109u189.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_mask_2d_config_v2/s109u189.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/mask_cycle_gan_vc_hifigan_vocoder/s109u189.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/hifigan_dtw/s109u189.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/nvcnet/s109u189.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">s111u083</th>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/whisper/s111u083.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/normal/s111u083.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_no_mask/s111u083.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/simple_mask/s111u083.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/cycle_mask_2d_config_v2/s111u083.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/mask_cycle_gan_vc_hifigan_vocoder/s111u083.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/hifigan_dtw/s111u083.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+				<td>
+					<audio controls="">
+					<source src="audio/is23_testset10_v3/nvcnet/s111u083.wav" type="audio/wav" />
+					Your browser does not support the audio element.
+					</audio>
+				</td>
+			</tr>
+	</tbody>
+	</table>
+
+	<p>
+		<ul>
+			<li>
+				<b>Our method <small>(cycle-consistent only)</small>:</b> 
+				Regular cycle-consistent training only (i.e., no masking, 
+		no additional adversarial loss, and no GLU feature encoder
+			</li>
+			<li>
+				<b>Our method <small>(+masking+Ladv2)</small>:</b> 
+				Masking and second adversarial loss added to the training procedure
+			</li>
+			<li>
+				<b>Our method <small>(+masking+Ladv2)</small>:</b> 
+				Dull model with masking, additional adversarial loss and GLU feature encoder
+			</li>
+			<li>
+				<b>MaskCycleGAN-VC:</b> 
+				The MaskCycleGAN-VC proposed in [3]
+			</li>
+			<li>
+				<b>HiFi-GAN+DTW:</b> 
+				Original HiFi-GAN [4] trained with DTW-aligned parallel input features
+			</li>
+			<li>
+				<b>NVC-Net:</b> 
+				The model proposed in [5] trained in a many-to-many setting
+			</li>
+		</ul>
+	</p>
+
+	<p>Whispered and voiced audio samples were taken from the wTIMIT corpus [1].</p>
+
+	<h3><strong>Conventional voice conversion</strong></h3>
+	<p>Traditional voice conversion is performed between different 
+		speakers.  
+		Some samples from the testset are presented in the table below.
+	</p>
+	<table style="width: 100%;">
+		<thead>
+		<tr>
+			<th></th>
+			<th>Source</th>
+			<th>Target</th>
+			<th>Our method (full)</th>
+			<th>MaskCycleGAN-VC [3]</th>
+		</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th scope="row">F&#8594;F</th>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p225_p229/source.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p225_p229/target.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p225_p229/ours.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p225_p229/maskcycleganvc.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">M&#8594;M</th>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p273_p274/source.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p273_p274/target.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p273_p274/ours.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p273_p274/maskcycleganvc.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">M&#8594;F</th>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p232_p231/source.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p232_p231/target.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p232_p231/ours.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p232_p231/target.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+			</tr>	
+			<tr>
+				<th scope="row">F&#8594;M</th>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p231_p232/source.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p231_p232/target.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p231_p232/ours.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+				<td>
+				<audio controls="">
+				<source src="audio/vctk/p231_p232/maskcycleganvc.wav" type="audio/wav" />
+				Your browser does not support the audio element.
+				</audio>
+				</td>
+			</tr>
+	</tbody>
+	</table>
+	<p>
+		<small>
+			<strong>F&#8594;F</strong>: Female to female <small>(p225 &#8594; p229)</small>;
+			<strong>M&#8594;M</strong>: Male to male <small>(p273 &#8594; p274)</small>; 
+			<strong>M&#8594;F</strong>: Male to female <small>(p232 &#8594; p231)</small>; 
+			<strong>F&#8594;M</strong>: Female to male <small>(p231 &#8594; p232)</small>;
+		</small>
+	</p>
+	<p>
+		Our method refers to the full model, i.e., including masking, 
+		additional adversarial loss, and GLU feature encoder. 
+	</p>
+	<p>Source and target audio samples were taken from the VCTK dataset [2].</p>
+
+	<h2><span style="color:black"> <strong>References</strong> </span></h2>
+	<p>[1]
+		<a href="http://www.isle.illinois.edu/sst/data/wTIMIT/">
+			Lim, B. P. (2010). Computational differences between whispered and 
+			non-whispered speech. University of Illinois.
+		</a>
+		
+	</p>
+	<p>[2] 
+		<a href="https://datashare.ed.ac.uk/handle/10283/3443">
+			Yamagishi, J., Veaux, C., & MacDonald, K. (2019). CSTR VCTK corpus: 
+			English multi-speaker corpus for CSTR voice cloning toolkit. 
+			University of Edinburgh. The Centre for Speech Technology Research (CSTR).
+		</a>
+	</p>
+	<p>
+		[3]
+		<a href="https://doi.org/10.1109/ICASSP39728.2021.9414851">
+			Kaneko, T., Kameoka, H., Tanaka, K., & Hojo, N. (2021). 
+			Maskcyclegan-VC: Learning Non-Parallel Voice Conversion with Filling in Frames. 
+			ICASSP 2021 - 2021 IEEE International Conference on Acoustics, 
+			Speech and Signal Processing (ICASSP), 
+			5919-5923.
+		</a>
+	</p>
+	<p>[4]
+		<a href="https://proceedings.neurips.cc/paper/2020/file/c5d736809766d46260d816d8dbc9eb44-Paper.pdf">
+			Kong, J., Kim, J., & Bae, J. (2020). 
+			HiFi-GAN: Generative Adversarial Networks for Efficient and High 
+			Fidelity Speech Synthesis. In H. Larochelle, M. Ranzato, 
+			Advances in Neural Information Processing Systems 
+			(Vol. 33, pp. 17022-17033).
+		</a>
+	</p>
+	<p>
+		[5]
+		<a href="https://doi.org/10.1109/ICASSP43922.2022.9747020">
+			Nguyen, B., & Cardinaux, F. (2022). 
+			NVC-Net: End-To-End Adversarial Voice Conversion. 
+			ICASSP 2022 - 2022 IEEE International Conference on Acoustics, 
+			Speech and Signal Processing (ICASSP), 7012-7016.
+		</a>
+	</p>
+    </main>
+  </body>
+</html>
+
